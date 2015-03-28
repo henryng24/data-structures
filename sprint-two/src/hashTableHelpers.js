@@ -16,13 +16,19 @@ var LimitedArray = function(limit){
 
   var limitedArray = {};
   
-  limitedArray.get = function(index){
+  limitedArray.get = function(index, k){
     checkLimit(index);
-    return storage[index];
+    if (storage[index].hasOwnProperty(k)) {
+      return storage[index][k];
+    }
+    return null;
   };
-  limitedArray.set = function(index, value){
+  limitedArray.set = function(index, value, k){
     checkLimit(index);
-    storage[index] = value;
+    if (storage[index] === undefined) {
+      storage[index] = {};
+    }
+    storage[index][k] = value;
   };
   limitedArray.each = function(callback){
     for(var i = 0; i < storage.length; i++){
@@ -42,6 +48,7 @@ var LimitedArray = function(limit){
 // to turn any string into an integer that is well-distributed between the
 // numbers 0 and `max`
 var getIndexBelowMaxForKey = function(str, max){
+  
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
     hash = (hash<<5) + hash + str.charCodeAt(i);
